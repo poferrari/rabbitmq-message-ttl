@@ -1,0 +1,24 @@
+version: '3.1'
+
+volumes:  
+  mqdata:
+
+services:  
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitMQ
+    volumes:
+      - mqdata:/var/lib/rabbitmq/mnesia
+    ports:
+      - "15672:15672"
+      - "5672:5672" 
+    networks:
+      - log
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: MagicWord
+      RABBITMQ_DEFAULT_VHOST: TransactionMessage
+
+networks:
+  log:
+    driver: bridge
