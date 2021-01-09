@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Message.Publisher.Worker
 {
@@ -21,24 +23,42 @@ namespace Message.Publisher.Worker
 
             var services = new ServiceCollection();
             services.ConfigureServices(configuration);
+            var serviceProvider = services.BuildServiceProvider();
+            var service = serviceProvider.GetRequiredService<IQueueBroker>();
+
+            var manualResetEvent = new ManualResetEvent(false);
+            manualResetEvent.Reset();
 
             try
             {
-                var serviceProvider = services.BuildServiceProvider();
+                Task.Run(() =>
+                {
+                    int count = 0;
 
-                var content = @$"{DateTime.Now:dd/MM/yyyy HH:mm:ss} - Conteúdo da Mensagem: {Guid.NewGuid()}";
-                var message = new MessageExample(content);
+                    while (true)
+                    {
+                        Console.WriteLine("Press any key to insert 100 messages:");
+                        Console.ReadLine();
 
-                var service = serviceProvider.GetRequiredService<IQueueBroker>();
-                service.Publish(QueueConst.PrefixTransaction.GetExchange(), message);
+                        for (var index = 0; index < 100; index++)
+                        {
+
+                            var content = @$"Ordem: {count++} - {DateTime.Now:dd/MM/yyyy HH:mm:ss} - Conteúdo da Mensagem: {Guid.NewGuid()}";
+                            var message = new MessageExample(content);
+
+                            service.Publish(QueueConst.PrefixTransaction.GetExchange(), message);
+
+                            Console.WriteLine($"Publish {count} message: {content}");
+                        }
+                    }
+                });
+
+                manualResetEvent.WaitOne();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
-
-
-            Console.WriteLine("Publish message.");
         }
     }
 }
