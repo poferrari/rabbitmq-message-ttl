@@ -1,6 +1,8 @@
-﻿using Message.Consumer.Infra.IoC;
+﻿using Message.Consumer.Domain.MessageBroker;
+using Message.Consumer.Infra.IoC;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.IO;
 
 namespace Message.Consumer.Worker
@@ -19,7 +21,18 @@ namespace Message.Consumer.Worker
             services.ConfigureServices(configuration);
             var serviceProvider = services.BuildServiceProvider();
 
+            try
+            {
+                var service = serviceProvider.GetRequiredService<IQueueConsumer>();
+                service.Consume();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
 
+            Console.WriteLine("Press [enter] to exit.");
+            Console.ReadLine();
         }
     }
 }

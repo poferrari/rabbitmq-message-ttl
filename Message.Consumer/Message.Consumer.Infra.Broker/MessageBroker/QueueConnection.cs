@@ -40,7 +40,9 @@ namespace Message.Consumer.Infra.Broker.MessageBroker
                 Port = queueConfig.Port,
                 UserName = queueConfig.UserName,
                 Password = queueConfig.Password,
-                VirtualHost = queueConfig.VirtualHost
+                VirtualHost = queueConfig.VirtualHost,
+                AutomaticRecoveryEnabled = true,
+                DispatchConsumersAsync = true
             };
     }
 }

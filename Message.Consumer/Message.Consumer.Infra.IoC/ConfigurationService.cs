@@ -1,4 +1,5 @@
-﻿using Message.Consumer.Domain.MessageBroker;
+﻿using Message.Consumer.Domain.DomainExample;
+using Message.Consumer.Domain.MessageBroker;
 using Message.Consumer.Infra.Broker.MessageBroker;
 using Message.Consumer.Worker.Configurations;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,9 @@ namespace Message.Consumer.Infra.IoC
             services.AddScoped<IQueueSetup, QueueSetup>();
 
             services.AddScoped<IQueuePublisher, QueuePublisher>();
+            services.AddScoped<IQueueConsumer, QueueConsumer>();
+
+            services.AddScoped<IMessageTransactionHandler, MessageTransactionHandler>();
 
             return services;
         }
