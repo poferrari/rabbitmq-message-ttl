@@ -1,10 +1,10 @@
-﻿using Message.Publisher.Domain.MessageBroker;
-using Message.Publisher.Infra.Broker.MessageBroker;
-using Message.Publisher.Worker.Configurations;
+﻿using Message.Consumer.Domain.MessageBroker;
+using Message.Consumer.Infra.Broker.MessageBroker;
+using Message.Consumer.Worker.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Message.Publisher.Infra.IoC
+namespace Message.Consumer.Infra.IoC
 {
     public static class ConfigurationService
     {

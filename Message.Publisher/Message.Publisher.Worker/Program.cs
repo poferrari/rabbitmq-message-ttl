@@ -1,6 +1,7 @@
 ﻿using Message.Publisher.Domain.Consts;
 using Message.Publisher.Domain.Extensions;
 using Message.Publisher.Domain.MessageBroker;
+using Message.Publisher.DomainExample;
 using Message.Publisher.Infra.IoC;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,7 @@ namespace Message.Publisher.Worker
             var services = new ServiceCollection();
             services.ConfigureServices(configuration);
             var serviceProvider = services.BuildServiceProvider();
-            var service = serviceProvider.GetRequiredService<IQueueBroker>();
+            var service = serviceProvider.GetRequiredService<IQueuePublisher>();
 
             var manualResetEvent = new ManualResetEvent(false);
             manualResetEvent.Reset();
@@ -42,7 +43,6 @@ namespace Message.Publisher.Worker
 
                         for (var index = 0; index < 100; index++)
                         {
-
                             var content = @$"Ordem: {count++} - {DateTime.Now:dd/MM/yyyy HH:mm:ss} - Conteúdo da Mensagem: {Guid.NewGuid()}";
                             var message = new MessageExample(content);
 

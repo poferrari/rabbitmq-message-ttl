@@ -6,12 +6,12 @@ using System.Text;
 
 namespace Message.Publisher.Infra.Broker.MessageBroker
 {
-    public class QueueBroker : IQueueBroker
+    public class QueuePublisher : IQueuePublisher
     {
         private readonly IQueueConnection _queueConnection;
         private const byte Persistent = 2;
 
-        public QueueBroker(IQueueConnection queueConnection, IQueueSetup queueSetup)
+        public QueuePublisher(IQueueConnection queueConnection, IQueueSetup queueSetup)
         {
             _queueConnection = queueConnection;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Message.Publisher.Worker
+namespace Message.Publisher.DomainExample
 {
     public class MessageExample
     {
