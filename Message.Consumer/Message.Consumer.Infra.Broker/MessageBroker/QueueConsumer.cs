@@ -37,11 +37,11 @@ namespace Message.Consumer.Infra.Broker.MessageBroker
             _consumer.Received += async (_, @event) => await ConsumerReceived(@event);
         }
 
-        public void Consume()
+        public void Consume(string queueName)
         {
             _channel.BasicQos(prefetchSize: 0, prefetchCount: MaxConsumption, false);
 
-            _channel.BasicConsume(queue: QueueConst.PrefixTransaction.GetQueue(),
+            _channel.BasicConsume(queue: queueName,
                         autoAck: false,
                         consumer: _consumer);
         }
@@ -73,7 +73,7 @@ namespace Message.Consumer.Infra.Broker.MessageBroker
             {
                 Console.WriteLine($"Error handling message. DeliveryTag: {@event.DeliveryTag}. Exception: {ex.Message}");
 
-                _channel.BasicAck(@event.DeliveryTag, false);
+                _channel.BasicReject(@event.DeliveryTag, false);
             }
 
             Console.WriteLine($"Message: {@event.DeliveryTag}");
@@ -106,7 +106,7 @@ namespace Message.Consumer.Infra.Broker.MessageBroker
                 return;
             }
 
-            _queuePublisher.Publish(new MessageData(QueueConst.PrefixTransaction.GetExchangeTtl(), body)
+            _queuePublisher.Publish(new MessageData(QueueConst.FinancialTransactionEventsDeadLetter.GetExchange(), body)
             {
                 Headers = @event.BasicProperties.Headers,
             });

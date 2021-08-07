@@ -22,16 +22,67 @@ services:
       RABBITMQ_DEFAULT_PASS: MagicWord
       RABBITMQ_DEFAULT_VHOST: TransactionMessage
       
-  rabbitmq-publisher:
+  publisher:
     build: 
       context: ./Message.Publisher
       dockerfile: Dockerfile
     environment:
       QUEUECONFIG_HOSTNAME: rabbitmq
+      QUEUECONFIG_PORT: 5672
+      QUEUECONFIG_PASSWORD: MagicWord
+      QUEUECONFIG_VIRTUALHOST: TransactionMessage
     networks:
       - rede
     depends_on:      
       - "rabbitmq"
+
+  consumer-ted:
+    build: 
+      context: ./Message.Consumer
+      dockerfile: Dockerfile
+    environment:
+      QUEUECONFIG_HOSTNAME: rabbitmq
+      QUEUECONFIG_PORT: 5672
+      QUEUECONFIG_PASSWORD: MagicWord
+      QUEUECONFIG_VIRTUALHOST: TransactionMessage
+      QUEUECONFIG_QUEUENAME: financial-transactions-ted
+    networks:
+      - rede
+    depends_on:
+      - "rabbitmq"
+      - "publisher"
+
+  consumer-doc:
+    build: 
+      context: ./Message.Consumer
+      dockerfile: Dockerfile
+    environment:
+      QUEUECONFIG_HOSTNAME: rabbitmq
+      QUEUECONFIG_PORT: 5672
+      QUEUECONFIG_PASSWORD: MagicWord
+      QUEUECONFIG_VIRTUALHOST: TransactionMessage
+      QUEUECONFIG_QUEUENAME: financial-transactions-doc
+    networks:
+      - rede
+    depends_on:
+      - "rabbitmq"
+      - "publisher"
+
+  consumer-pix:
+    build: 
+      context: ./Message.Consumer
+      dockerfile: Dockerfile
+    environment:
+      QUEUECONFIG_HOSTNAME: rabbitmq
+      QUEUECONFIG_PORT: 5672
+      QUEUECONFIG_PASSWORD: MagicWord
+      QUEUECONFIG_VIRTUALHOST: TransactionMessage
+      QUEUECONFIG_QUEUENAME: financial-transactions-pix
+    networks:
+      - rede
+    depends_on:
+      - "rabbitmq"
+      - "publisher"
 
 networks:
   rede:

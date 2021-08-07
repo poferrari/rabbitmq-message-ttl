@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message.Consumer.Worker", "Message.Consumer.Worker\Message.Consumer.Worker.csproj", "{1567FE41-D519-4DAB-943E-50E5547E14E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.Consumer.Worker", "Message.Consumer.Worker\Message.Consumer.Worker.csproj", "{1567FE41-D519-4DAB-943E-50E5547E14E2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - App", "01 - App", "{8D4FBA2C-96E5-40B7-85CB-14733CF24F4C}"
 EndProject
@@ -11,11 +11,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - Domain", "02 - Domain"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 - Infra", "03 - Infra", "{028BE18E-E837-42BA-A47D-69EFFC0B13E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message.Consumer.Domain", "Message.Consumer.Domain\Message.Consumer.Domain.csproj", "{065B9A22-56D1-47E6-B5EB-A37A740A7E9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.Consumer.Domain", "Message.Consumer.Domain\Message.Consumer.Domain.csproj", "{065B9A22-56D1-47E6-B5EB-A37A740A7E9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message.Consumer.Infra.IoC", "Message.Consumer.Infra.IoC\Message.Consumer.Infra.IoC.csproj", "{4B9A9C75-41D3-45A9-9FFB-8B1364285927}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.Consumer.Infra.IoC", "Message.Consumer.Infra.IoC\Message.Consumer.Infra.IoC.csproj", "{4B9A9C75-41D3-45A9-9FFB-8B1364285927}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message.Consumer.Infra.Broker", "Message.Consumer.Infra.Broker\Message.Consumer.Infra.Broker.csproj", "{85689510-0698-4BF6-BC1E-A40EEE402516}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.Consumer.Infra.Broker", "Message.Consumer.Infra.Broker\Message.Consumer.Infra.Broker.csproj", "{85689510-0698-4BF6-BC1E-A40EEE402516}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C0925234-B30A-4F34-BC52-6EB879CADB41}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

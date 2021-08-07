@@ -14,8 +14,7 @@ namespace Message.Consumer.Infra.IoC
             var rabbitMQConfig = configuration.GetSection(nameof(QueueConfig)).Get<QueueConfig>();
             services.AddSingleton(rabbitMQConfig);
 
-            services.AddScoped<IQueueConnection, QueueConnection>();
-            services.AddScoped<IQueueSetup, QueueSetup>();
+            services.AddScoped<IQueueConnection, QueueConnection>();            
 
             services.AddScoped<IQueuePublisher, QueuePublisher>();
             services.AddScoped<IQueueConsumer, QueueConsumer>();

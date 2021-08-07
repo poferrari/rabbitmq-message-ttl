@@ -42,7 +42,8 @@ namespace Message.Consumer.Infra.Broker.MessageBroker
                 Password = queueConfig.Password,
                 VirtualHost = queueConfig.VirtualHost,
                 AutomaticRecoveryEnabled = true,
-                DispatchConsumersAsync = true
+                DispatchConsumersAsync = true,
+                NetworkRecoveryInterval = TimeSpan.FromSeconds(10)
             };
     }
 }

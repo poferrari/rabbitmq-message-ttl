@@ -19,7 +19,7 @@ namespace Message.Publisher.Worker
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile($"appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
 
             IConfiguration configuration = builder.Build();
@@ -48,8 +48,8 @@ namespace Message.Publisher.Worker
 
                     while (true)
                     {
-                        Console.WriteLine("Press any key to insert 100 messages:");
-                        Console.ReadLine();
+                        //Console.WriteLine("Press any key to insert 100 messages:");
+                        //Console.ReadLine();
 
                         for (var index = 0; index < 100; index++)
                         {
