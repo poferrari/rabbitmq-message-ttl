@@ -7,33 +7,75 @@ namespace Message.Publisher.Infra.Broker.MessageBroker
 {
     public class QueueSetup : IQueueSetup
     {
-        private const string ExchangeType = "direct";
+        private const string QueueModel = "x-queue-mode";
+        private const string LazyQueueModel = "lazy";
+        private const int DefaultTimeToLiveInMilliseconds = 60000;
 
         public void Initialize(IModel channel)
         {
-            var queuesDefinitions = new List<QueueDefinition>
-            {
-                new QueueDefinition(QueueConst.PrefixTransaction.GetExchange(), QueueConst.PrefixTransaction.GetQueue(),
-                    new Dictionary<string, object>()
-                    {
-                        ["x-queue-mode"] = "lazy"
-                    }),
-                new QueueDefinition(QueueConst.PrefixTransaction.GetExchangeTtl(), QueueConst.PrefixTransaction.GetQueueTtl(),
-                    new Dictionary<string, object>()
-                    {
-                        ["x-message-ttl"] = 100000,
-                        ["x-dead-letter-exchange"] = QueueConst.PrefixTransaction.GetExchange()
-                    })
-            };
+            string exchangeFinancialTransactionUnrouted = CreateUnroutedEvents(channel);
 
-            queuesDefinitions.ForEach(definition => CreateExchangeAndQueue(channel, definition));
+            var prefixFinancialTransactionEvents = PrefixQueueConst.FinancialTransactionEvents;
+            var exchangeFinancialTransactionEvents = prefixFinancialTransactionEvents.GetExchange();
+            channel.ExchangeDeclare(exchangeFinancialTransactionEvents, "topic", durable: true, autoDelete: false,
+                arguments: new Dictionary<string, object>()
+                {
+                    [QueueModel] = LazyQueueModel,
+                    ["alternate-exchange"] = exchangeFinancialTransactionUnrouted
+                });
+
+            var prefixDOC = PrefixQueueConst.DOC;
+            CreateQueueFinancialTransaction(channel, exchangeFinancialTransactionEvents, prefixDOC);
+
+            var prefixTED = PrefixQueueConst.TED;
+            CreateQueueFinancialTransaction(channel, exchangeFinancialTransactionEvents, prefixTED);
+
+            var prefixPIX = PrefixQueueConst.PIX;
+            CreateQueueFinancialTransaction(channel, exchangeFinancialTransactionEvents, prefixPIX);
+
+            var prefixFinancialTransactionEventsDeadLetter = PrefixQueueConst.FinancialTransactionEventsDeadLetter;
+            var exchangeFinancialTransactionEventsDeadLetter = prefixFinancialTransactionEventsDeadLetter.GetExchange();
+            channel.ExchangeDeclare(exchangeFinancialTransactionEventsDeadLetter, "topic", durable: true, autoDelete: false,
+                arguments: GetLazyQueueModelArguments());
+            var queueFinancialTransactionEventsDeadLetter = prefixFinancialTransactionEventsDeadLetter.GetQueue();
+            channel.QueueDeclare(queueFinancialTransactionEventsDeadLetter, durable: true, exclusive: false, autoDelete: false,
+                arguments: new Dictionary<string, object>()
+                {
+                    [QueueModel] = LazyQueueModel,
+                    ["x-message-ttl"] = DefaultTimeToLiveInMilliseconds,
+                    ["x-dead-letter-exchange"] = exchangeFinancialTransactionEvents
+                });
+            channel.QueueBind(queueFinancialTransactionEventsDeadLetter, exchangeFinancialTransactionEventsDeadLetter, "financial.*.*");
         }
 
-        private void CreateExchangeAndQueue(IModel channel, QueueDefinition definition)
+        private static string CreateUnroutedEvents(IModel channel)
         {
-            channel.ExchangeDeclare(definition.ExchangeName, ExchangeType, durable: true, autoDelete: false);
-            channel.QueueDeclare(definition.QueueName, durable: true, exclusive: false, autoDelete: false, arguments: definition.Arguments);
-            channel.QueueBind(definition.QueueName, definition.ExchangeName, string.Empty);
+            var prefixFinancialTransactionUnrouted = PrefixQueueConst.FinancialTransactionUnrouted;
+            var exchangeFinancialTransactionUnrouted = prefixFinancialTransactionUnrouted.GetExchange();
+            channel.ExchangeDeclare(exchangeFinancialTransactionUnrouted, "fanout", durable: true, autoDelete: false,
+                arguments: GetLazyQueueModelArguments());
+            var queueTransactionUnrouted = prefixFinancialTransactionUnrouted.GetQueue();
+            channel.QueueDeclare(queueTransactionUnrouted, durable: true, exclusive: false, autoDelete: false,
+                arguments: GetLazyQueueModelArguments());
+            channel.QueueBind(queueTransactionUnrouted, exchangeFinancialTransactionUnrouted, string.Empty);
+            return exchangeFinancialTransactionUnrouted;
+        }
+
+        private static Dictionary<string, object> GetLazyQueueModelArguments()
+            => new Dictionary<string, object>()
+            {
+                [QueueModel] = LazyQueueModel
+            };
+
+        private static void CreateQueueFinancialTransaction(IModel channel, string exchangeName, string prefixQueue)
+        {
+            var queueDOC = prefixQueue.GetQueue();
+            channel.QueueDeclare(queueDOC, durable: true, exclusive: false, autoDelete: false,
+                arguments: new Dictionary<string, object>()
+                {
+                    [QueueModel] = LazyQueueModel
+                });
+            channel.QueueBind(queueDOC, exchangeName, prefixQueue.GetRoutingKey());
         }
     }
 }

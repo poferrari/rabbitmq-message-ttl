@@ -6,6 +6,9 @@ volumes:
 services:  
   rabbitmq:
     image: rabbitmq:3-management-alpine
+    hostname: rabbitmq
+    labels:
+      NAME: "rabbitmq"
     container_name: rabbitMQ
     volumes:
       - mqdata:/var/lib/rabbitmq/mnesia
@@ -13,12 +16,23 @@ services:
       - "15672:15672"
       - "5672:5672" 
     networks:
-      - log
+      - rede
     environment:
       RABBITMQ_DEFAULT_USER: rabbitmq
       RABBITMQ_DEFAULT_PASS: MagicWord
       RABBITMQ_DEFAULT_VHOST: TransactionMessage
+      
+  rabbitmq-publisher:
+    build: 
+      context: ./Message.Publisher
+      dockerfile: Dockerfile
+    environment:
+      QUEUECONFIG_HOSTNAME: rabbitmq
+    networks:
+      - rede
+    depends_on:      
+      - "rabbitmq"
 
 networks:
-  log:
+  rede:
     driver: bridge

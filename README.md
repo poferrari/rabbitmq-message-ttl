@@ -18,6 +18,8 @@ Message.Consumer.Worker
 - Há um limite de tentativas para tratar a mensagem, caso não consiga processar sem exceção, a mensagem sai da fila `transactions-queue`
 
 # referências
+https://lp.gago.io/rabbitmq?utm_source=gagoio&utm_campaign=template_rabbitmq&utm_medium=gagoio&utm_content=cta-lateral
+
 https://www.wevo.io/implementando-resiliencia-entre-microservicos-com-dead-letter-e-rabbitmq/
 
 https://medium.com/@leojasmim/delayed-exchanges-criando-workflow-de-mensagens-entre-filas-com-penalidade-em-rabbitmq-29392622fc77
@@ -39,3 +41,4 @@ https://gago.io/tag/rabbitmq/
 - Pedro Verceze
 - Vinicius Blasek
 - Lucas Vieira
+- Luiz Carlos Faria
